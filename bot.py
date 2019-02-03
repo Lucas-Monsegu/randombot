@@ -18,7 +18,6 @@ async def timeout():
         for chan in li:
             if chan[0].is_connected() and not chan[1].is_playing():
                 if chan in CHANNELS.values():
-                    print('Timeout', chan.server.name)
                     await chan[1].stop()
                     await chan[0].disconnect()
                     CHANNELS.pop(chan[0].server.id, None)
@@ -75,31 +74,32 @@ async def rand(message, words):
         await client.send_message(message.channel, words[1:][random.randint(0, len(words)-2)])
 
 async def botCom(message):
-    if message.author.name != 'Itectobot':
+    if message.author.name != 'ItectoBot':
         return
-    if 'a gagné.' in message.content and '@Luka' in message.content:
+    if '<@!214378496087162880> a gagné.' in message.content:
         victorycount = 0
         if os.path.exists('lukascore.txt'):
             with open('lukascore.txt', 'r') as f:
                 victorycount = int(f.read())
         victorycount += 1
-        await client.send_message(message.channel, 'Luka\'s victory count:'+ str(victorycount))
+        await client.send_message(message.channel, 'Luka\'s victory count: '+ str(victorycount))
         with open('lukascore.txt', 'w+') as f:
             f.write(str(victorycount))
-COMMANDS =  {
-            'play': music,
-            'random': rand,
-            'stop': stop,
-            }
+async def helpmessage(message, words):
+    m = ''
+    await client.send_message(message.channel, m)
+    
+
 @client.event
 async def on_message(message):
     # we do not want the bot to reply to itself
+    await botCom(message)
     if message.author == client.user or len(message.content) <= 0 or message.content[0] != SYMBOL:
         return
     words = message.content[1:].split()
     print("Receive:", words)
     if words[0] in COMMANDS.keys():
-        await COMMANDS[words[0]](message, words)
+        await COMMANDS[words[0]][0](message, words)
 
     if message.content.startswith('!hello'):
         msg = 'Hello {0.author.mention}'.format(message)
@@ -111,6 +111,10 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
-loop = asyncio.get_event_loop()
-asyncio.ensure_future(timeout() ,loop=loop)
-client.run(TOKEN)
+
+try:
+    loop = asyncio.get_event_loop()
+    asyncio.ensure_future(timeout() ,loop=loop) 
+    client.run(TOKEN)
+except KeyboardInterrupt:
+    print("Received exit, exiting")
