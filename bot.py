@@ -8,102 +8,63 @@ SYMBOL = '!'
 CHANNELS = {}
 client = discord.Client()
 
-async def timeout():
-    while True:
-        li = []
-        for chan in CHANNELS.values():
-            if chan[0].is_connected() and not chan[1].is_playing():
-                li.append(chan)
-        await asyncio.sleep(20)
-        for chan in li:
-            if chan[0].is_connected() and not chan[1].is_playing():
-                if chan in CHANNELS.values():
-                    await chan[1].stop()
-                    await chan[0].disconnect()
-                    CHANNELS.pop(chan[0].server.id, None)
-async def stop(message, words):
-    if not CHANNELS.get(message.server.id) or not CHANNELS.get(message.server.id)[1].is_playing():
-        await client.send_message(message.channel, "Billy is not doing anything")
-    else:
-        CHANNELS.get(message.server.id)[1].stop()
-        await client.send_message(message.channel, "Billy stopped")
 
-async def music(message, words):
-    if message.author.voice.voice_channel == None or message.author.voice.voice_channel == client.server_voice_state:
-        await client.send_message(message.channel, "User not in voice channel")
-        return
-    
-    if not CHANNELS.get(message.server.id):
-        voice = await client.join_voice_channel(message.author.voice_channel)
-    else:
-        voice = CHANNELS[message.server.id][0]
-    if voice.channel != message.author.voice_channel:
-        if voice.is_connected:
-            await voice.move_to(message.author.voice_channel)
-        else:
-            CHANNELS.pop(message.server.id, None)
-            music(message, words)
+async def randduel(message, words):
+    if len(words) == 1 and words[0] == 'channel':
+        if message.author.voice is None or message.author.voice.channel is None:
+            await message.channel.send('You are not in any voice channel')
             return
-    if CHANNELS.get(message.server.id) and CHANNELS[message.server.id][1].is_playing():
-        await client.send_message(message.channel, "Billy is already playing")
+        li = list(map(lambda x: x.display_name, message.author.voice.channel.members))
+        if len(li) < 2:
+            await message.channel.send('You are alone.')
+            return
+        p1 = li.pop(random.randint(0, len(li)-1))
+        p2 = li.pop(random.randint(0, len(li)-1))
+        await message.channel.send(f'{p1} vs {p2}')
         return
-    url = words[1]
-    try:
-        beforeArgs = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5" 
-        player = await voice.create_ytdl_player(url=url, before_options=beforeArgs)
-    except Exception as e:
-        await client.send_message(message.channel, "Billy do not recognize this URL because he only knows YOUTUBE !")
-        await voice.disconnect()
-        print(e)
+    if len(words) < 2:
+        await message.channel.send('Not enough arguments')
         return
-    player.volume = 0.1
-    player.start()
-    CHANNELS[message.server.id] = (voice, player)
+    p1 = words.pop(random.randint(0, len(words)-1))
+    p2 = words.pop(random.randint(0, len(words)-1))
+    await message.channel.send(f'{p1} vs {p2}')
+
 
 async def rand(message, words):
-    if len(words) < 2:
+    if len(words) == 1 and words[0] == 'channel':
+        if message.voice is not None and message.voice.channel is not None:
+            await message.channel.send('You are not in any voice channel')
+            return
+        li = list(map(message.voice.channel.members, lambda x: x.display_name))
+        r = li[random.randint(0, len(li)-1)]
+        await message.channel.send(r)
         return
-    if words[1] == 'sc2':
-        await client.send_message(message.channel, ['Lucas', 'Theo', 'Adrien'][random.randint(0, 2)])
-        return
-    if len(words) < 3:
-        return
-    if words[1].isdigit() and words[2].isdigit():
-        await client.send_message(message.channel, str(random.randint(*sorted([int(words[1]), int(words[2])]))))
-    else:
-        await client.send_message(message.channel, words[1:][random.randint(0, len(words)-2)])
 
-async def botCom(message):
-    if message.author.name != 'ItectoBot':
-        return
-    if '<@!214378496087162880> a gagné.' in message.content:
-        victorycount = 0
-        if os.path.exists('lukascore.txt'):
-            with open('lukascore.txt', 'r') as f:
-                victorycount = int(f.read())
-        victorycount += 1
-        await client.send_message(message.channel, 'Luka\'s victory count: '+ str(victorycount))
-        with open('lukascore.txt', 'w+') as f:
-            f.write(str(victorycount))
+    if len(words) == 2 and words[1].isdigit() and words[2].isdigit():
+        await message.channel.send(str(random.randint(*sorted([int(words[1]), int(words[2])]))))
+    else:
+        await message.channel.send(words[1:][random.randint(0, len(words)-1)])
+
+
 async def helpmessage(message, words):
     m = ''
-    await client.send_message(message.channel, m)
-    
+    await message.channel.send(m)
+COMMANDS = {
+    "random": rand,
+    "randomduel": randduel
+}
+
 
 @client.event
 async def on_message(message):
     # we do not want the bot to reply to itself
-    await botCom(message)
     if message.author == client.user or len(message.content) <= 0 or message.content[0] != SYMBOL:
         return
     words = message.content[1:].split()
     print("Receive:", words)
     if words[0] in COMMANDS.keys():
-        await COMMANDS[words[0]][0](message, words)
+        await COMMANDS[words[0]](message, words[1:])
 
-    if message.content.startswith('!hello'):
-        msg = 'Hello {0.author.mention}'.format(message)
-        await client.send_message(message.channel, msg)
 
 @client.event
 async def on_ready():
@@ -114,7 +75,6 @@ async def on_ready():
 
 try:
     loop = asyncio.get_event_loop()
-    asyncio.ensure_future(timeout() ,loop=loop) 
     client.run(TOKEN)
 except KeyboardInterrupt:
     print("Received exit, exiting")
