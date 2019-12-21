@@ -1,3 +1,4 @@
+#!/usr/bin/python3.8
 import discord
 import random
 import os
@@ -40,8 +41,8 @@ async def rand(message, words):
         await message.channel.send(r)
         return
 
-    if len(words) == 2 and words[1].isdigit() and words[2].isdigit():
-        await message.channel.send(str(random.randint(*sorted([int(words[1]), int(words[2])]))))
+    if len(words) == 2 and words[0].isdigit() and words[1].isdigit():
+        await message.channel.send(str(random.randint(*sorted([int(words[0]), int(words[1])]))))
     else:
         await message.channel.send(words[1:][random.randint(0, len(words)-1)])
 
