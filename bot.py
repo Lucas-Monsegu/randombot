@@ -1,7 +1,6 @@
 #!/usr/bin/python3.8
 import discord
 import random
-import os
 import asyncio
 
 TOKEN = 'NTE4NTY0MTY1NDA5OTY0MDM3.Dzd8EA._X-hRwmJ4pZQoLN3QZ865Nlcg-I'
