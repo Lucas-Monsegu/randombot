@@ -1,0 +1,2 @@
+class NotInAVoiceChannel(Exception):
+    pass
