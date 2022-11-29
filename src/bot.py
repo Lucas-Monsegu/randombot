@@ -98,15 +98,13 @@ async def randomduel(ctx: Context, *args: list[str]):
 
     if len(words) == 0:
         if not ctx.author.voice or not ctx.author.voice:
-            await ctx.send("You are not in any voice channel")
-            return
+            return await ctx.send("You are not in any voice channel")
         words = list(
             map(lambda x: x.display_name, message.author.voice.channel.members)
         )
 
     if len(words) < 2:
-        await message.channel.send("Need at least 2 words")
-        return
+        return await message.channel.send("Need at least 2 words")
     p1 = words.pop(rand.randint(0, len(words) - 1))
     p2 = words.pop(rand.randint(0, len(words) - 1))
     await ctx.send(f"{p1} vs {p2}")
