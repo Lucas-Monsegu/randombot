@@ -2,6 +2,12 @@
 
 RandomBot is a discord bot that generate randomness
 
+# Some screenshots
+
+![Alt text](screenshots/help.png?raw=true "help")
+![Alt text](screenshots/random_duel.png?raw=true "random duel")
+![Alt text](screenshots/random_team.png?raw=true "random team")
+
 ## Installation
 
 Requirements: >python3.11, poetry
