@@ -17,7 +17,9 @@ SYMBOL = "!"
 
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(intents=intents, command_prefix=SYMBOL, description="I'm billy")
+bot = commands.Bot(
+    intents=intents, command_prefix=SYMBOL, description="I make randomness"
+)
 
 
 @bot.event
