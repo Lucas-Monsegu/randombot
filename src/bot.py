@@ -40,6 +40,7 @@ async def dmrandom(ctx: Context, *args):
         users = [await commands.UserConverter().convert(ctx, people) for people in args]
     except commands.errors.UserNotFound as e:
         await ctx.send(str(e))
+    await ctx.send('Sent a dm to a randomly chosen person')
     await users[rand.randint(0, len(users)-1)].send(f"You have been chosen !")
 
 
