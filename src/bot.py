@@ -2,6 +2,7 @@
 import asyncio
 import os
 import random as rand
+from itertools import zip_longest
 
 import discord
 from discord.ext import commands
@@ -86,7 +87,7 @@ async def randomteam(ctx: Context, *args):
         c = (c + 1) % nb_teams
     headers = [f"Team {i}" for i in range(nb_teams)]
     await ctx.send(
-        f"```{tabulate(list(zip(*teams)),headers=headers,tablefmt='fancy_grid')}```"
+        f"```{tabulate(list(zip_longest(*teams)),headers=headers,tablefmt='fancy_grid')}```"
     )
 
 
