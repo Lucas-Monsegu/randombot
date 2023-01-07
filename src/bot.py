@@ -40,7 +40,7 @@ async def dmrandom(ctx: Context, *args):
         users = [await commands.UserConverter().convert(ctx, people) for people in args]
     except commands.errors.UserNotFound as e:
         await ctx.send(str(e))
-    await users[rand.randint(0, len(users))].send(f"You have been chosen !")
+    await users[rand.randint(0, len(users)-1)].send(f"You have been chosen !")
 
 
 @bot.command()
@@ -49,7 +49,7 @@ async def coinflip(ctx: Context, *args):
     Flip a coin
     *no words
     """
-    await ctx.send(["Heads", "Tails"][rand.randint(0, 2)])
+    await ctx.send(["Heads", "Tails"][rand.randint(0,1)])
 
 
 @bot.command()
