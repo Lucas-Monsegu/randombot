@@ -2,6 +2,10 @@
 
 RandomBot is a discord bot that generate randomness
 
+## Deploy
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/Vp4tir)
+
 # Some screenshots
 
 ![Alt text](screenshots/help.png?raw=true "help")
@@ -16,10 +20,6 @@ Requirements: >python3.11, poetry
 poetry install
 poetry run python src/bot.py
 ```
-
-## Deploy
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/Vp4tir)
 
 ## Usage
 on discord !help
