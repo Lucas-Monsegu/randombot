@@ -17,6 +17,10 @@ poetry install
 poetry run python src/bot.py
 ```
 
+## Deploy
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/Vp4tir)
+
 ## Usage
 on discord !help
 ```
