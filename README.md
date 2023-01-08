@@ -2,7 +2,7 @@
 
 RandomBot is a discord bot that generate randomness
 
-![Alt text](screenshots/profile_picture_extra_small.png)
+![avatar](screenshots/avatar.png)
 
 ## Deploy
 
