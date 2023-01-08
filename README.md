@@ -2,9 +2,12 @@
 
 RandomBot is a discord bot that generate randomness
 
+![Alt text](screenshots/profile_picture_extra_small.png)
+
 ## Deploy
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/Vp4tir)
+
 
 # Some screenshots
 
